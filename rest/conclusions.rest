@@ -1,0 +1,26 @@
+GET http://localhost:3000/conclusions
+
+###
+
+POST http://localhost:3000/conclusions/add
+Content-Type: application/json
+
+{
+  "colors": ["#F4DDB4", "#F4A261", "#E76F51", "#2A9D8F"],
+  "pixelData": [    ["#F4DDB4", "#F4DDB4", "#F4DDB4", "#F4DDB4", "#F4DDB4", "#F4DDB4", "#F4DDB4", "#F4DDB4", "#F4DDB4", "#F4DDB4"],
+    ["#F4DDB4", "#F4DDB4", "#F4DDB4", "#F4DDB4", "#F4A261", "#F4A261", "#F4A261", "#F4A261", "#F4DDB4", "#F4DDB4"],
+    ["#F4DDB4", "#F4DDB4", "#F4DDB4", "#F4A261", "#E76F51", "#E76F51", "#2A9D8F", "#E76F51", "#E76F51", "#F4DDB4"],
+    ["#F4DDB4", "#F4DDB4", "#F4A261", "#E76F51", "#E76F51", "#2A9D8F", "#2A9D8F", "#E76F51", "#E76F51", "#F4DDB4"],
+    ["#F4DDB4", "#F4DDB4", "#F4A261", "#E76F51", "#2A9D8F", "#2A9D8F", "#2A9D8F", "#2A9D8F", "#E76F51", "#F4DDB4"],
+    ["#F4DDB4", "#F4A261", "#E76F51", "#2A9D8F", "#2A9D8F", "#2A9D8F", "#2A9D8F", "#2A9D8F", "#E76F51", "#F4DDB4"],
+    ["#F4DDB4", "#F4A261", "#2A9D8F", "#2A9D8F", "#2A9D8F", "#2A9D8F", "#2A9D8F", "#2A9D8F", "#F4A261", "#F4DDB4"],
+    ["#F4DDB4", "#F4A261", "#2A9D8F", "#2A9D8F", "#2A9D8F", "#2A9D8F", "#2A9D8F", "#2A9D8F", "#F4A261", "#F4DDB4"],
+    ["#F4DDB4", "#F4DDB4", "#F4A261", "#F4A261", "#F4A261", "#F4A261", "#F4A261", "#F4A261", "#F4DDB4", "#F4DDB4"],
+    ["#F4DDB4", "#F4DDB4", "#F4DDB4", "#F4DDB4", "#F4DDB4", "#F4A261", "#F4A261", "#F4DDB4", "#F4DDB4", "#F4DDB4"],
+    ["#F4DDB4", "#F4DDB4", "#F4A261", "#E76F51", "#2A9D8F", "#2A9D8F", "#2A9D8F", "#2A9D8F", "#E76F51", "#F4DDB4"],
+    ["#F4DDB4", "#F4A261", "#E76F51", "#2A9D8F", "#2A9D8F", "#2A9D8F", "#2A9D8F", "#2A9D8F", "#E76F51", "#F4DDB4"],
+    ["#F4DDB4", "#F4A261", "#2A9D8F", "#2A9D8F", "#2A9D8F", "#2A9D8F", "#2A9D8F", "#2A9D8F", "#F4A261", "#F4DDB4"],
+    ["#F4DDB4", "#F4A261", "#2A9D8F", "#2A9D8F", "#2A9D8F", "#2A9D8F", "#2A9D8F", "#2A9D8F", "#F4A261", "#F4DDB4"],
+    ["#F4DDB4", "#F4DDB4", "#F4A261", "#F4A261", "#F4A261", "#F4A261", "#F4A261", "#F4A261", "#F4DDB4", "#F4DDB4"],
+    ["#F4DDB4", "#F4DDB4", "#F4DDB4", "#F4DDB4", "#F4DDB4", "#F4A261", "#F4A261", "#F4DDB4", "#F4DDB4", "#F4DDB4"] ]
+}

@@ -10,6 +10,7 @@ console.log(process.env.MONGODB_URI);
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const conclusionsRouter = require('./routes/conclusions');
 
 const app = express();
 const server = require('http').Server(app);
@@ -36,6 +37,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/conclusions', conclusionsRouter);
 
 io.on("connection", function(socket) {
     console.log("User connected");
