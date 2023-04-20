@@ -41,6 +41,10 @@ app.use('/conclusions', conclusionsRouter);
 
 io.on("connection", function(socket) {
     console.log("User connected");
+
+    socket.on("disconnect", function() {
+      console.log("user disconnected");
+    })
 });
 
 module.exports = {app: app, server: server};
