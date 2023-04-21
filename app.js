@@ -46,7 +46,16 @@ app.use('/users', usersRouter);
 app.use('/conclusions', conclusionsRouter);
 
 io.on("connection", function(socket) {
-    console.log("User connected");
+    console.log(socket.id);
+
+    socket.on('userEnter', (number, string) => {
+      console.log(number, string);
+    })
+
+    socket.on('getUser', userName => {
+      console.log(userName);
+      socket.emit('getUser', userName);
+    })
 
     socket.on("disconnect", function() {
       console.log("user disconnected");
