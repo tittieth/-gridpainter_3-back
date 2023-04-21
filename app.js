@@ -14,7 +14,13 @@ const conclusionsRouter = require('./routes/conclusions');
 
 const app = express();
 const server = require('http').Server(app);
-const io = require('socket.io')(server);
+
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "http://127.0.0.1:5502",
+    methods: ["GET", "POST"]
+    }
+});
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true })
 
@@ -40,7 +46,20 @@ app.use('/users', usersRouter);
 app.use('/conclusions', conclusionsRouter);
 
 io.on("connection", function(socket) {
-    console.log("User connected");
+    console.log(socket.id);
+
+    socket.on('userEnter', (number, string) => {
+      console.log(number, string);
+    })
+
+    socket.on('getUser', userName => {
+      console.log(userName);
+      socket.emit('getUser', userName);
+    })
+
+    socket.on("disconnect", function() {
+      console.log("user disconnected");
+    })
 });
 
 module.exports = {app: app, server: server};
