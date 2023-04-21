@@ -22,16 +22,16 @@ const io = require("socket.io")(server, {
     }
 });
 
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true })
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
 
-const db = mongoose.connection
+const db = mongoose.connection;
 
 db.once('open', () => {
-  console.log('Database connected')
+  console.log('Database connected');
 });
 
 db.on('error', err => {
-  console.error('connection error:', err)
+  console.error('connection error:', err);
 });
 
 app.use(cors());
@@ -48,18 +48,26 @@ app.use('/conclusions', conclusionsRouter);
 io.on("connection", function(socket) {
     console.log(socket.id);
 
-    socket.on('userEnter', (number, string) => {
-      console.log(number, string);
-    })
+    // welcome current user
+    socket.emit('message', 'välkommen till gridpainter!');
+
+    // Broadcast when a user connects
+    socket.broadcast.emit('message', 'A user has joined the chat');
 
     socket.on('getUser', userName => {
       console.log(userName);
       socket.emit('getUser', userName);
-    })
+    });
 
-    socket.on("disconnect", function() {
-      console.log("user disconnected");
-    })
+    // listen for chatmessage
+    socket.on('chatMessage', (msg) => {
+      io.emit('message', msg);
+    });
+
+    // Runs when client disconnects
+    socket.on("disconnect", () => {
+      io.emit('message', 'A user has left the chat');
+    });
 });
 
 module.exports = {app: app, server: server};

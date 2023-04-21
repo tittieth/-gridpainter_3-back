@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
-const ConclusionModel = require('../models/conclusion-model')
+const ConclusionModel = require('../models/conclusion-model');
 
-router.get('/', async(req, res, next) => {
+router.get('/', async(req, res) => {
   try {
     const conclusions = await ConclusionModel.find();
     if (conclusions.length > 0) {
@@ -15,9 +15,9 @@ router.get('/', async(req, res, next) => {
   }
 });
 
-router.post('/add', async(req, res, next) => {
-  const conclusion = await ConclusionModel.create(req.body)
-  res.status(201).json(conclusion)
+router.post('/add', async(req, res) => {
+  const conclusion = await ConclusionModel.create(req.body);
+  res.status(201).json(conclusion);
 });
 
 module.exports = router;
