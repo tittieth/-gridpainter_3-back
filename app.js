@@ -11,6 +11,8 @@ console.log(process.env.MONGODB_URI);
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const conclusionsRouter = require('./routes/conclusions');
+const formatMessage = require('./utils/messages');
+const { userJoin, getCurrentUser } = require('./utils/users');
 
 const app = express();
 const server = require('http').Server(app);
@@ -45,28 +47,30 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/conclusions', conclusionsRouter);
 
+const botName = 'ChatCord Bot';
+
 io.on("connection", function(socket) {
     console.log(socket.id);
 
-    // welcome current user
-    socket.emit('message', 'välkommen till gridpainter!');
+    socket.on('getUser', ({userName, color}) => {
+      const user = userJoin(socket.id, userName, color);
+      socket.join(user);
 
-    // Broadcast when a user connects
-    socket.broadcast.emit('message', 'A user has joined the chat');
+        // welcome current user
+      socket.emit('message', formatMessage(botName, 'välkommen till gridpainter!'));
 
-    socket.on('getUser', userName => {
-      console.log(userName);
-      socket.emit('getUser', userName);
+      // Broadcast when a user connects
+      socket.broadcast.emit('message', formatMessage(botName, `${user.username} has joined the chat`));
     });
 
     // listen for chatmessage
     socket.on('chatMessage', (msg) => {
-      io.emit('message', msg);
+      io.emit('message', formatMessage('USER', msg));
     });
 
     // Runs when client disconnects
     socket.on("disconnect", () => {
-      io.emit('message', 'A user has left the chat');
+      io.emit('message', formatMessage(botName, 'A user has left the chat'));
     });
 });
 
