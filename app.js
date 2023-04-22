@@ -45,21 +45,26 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/conclusions', conclusionsRouter);
 
+const users = [];
+
 io.on("connection", function(socket) {
     console.log(socket.id);
 
     socket.on('userEnter', (number, string) => {
       console.log(number, string);
-    })
+    });
 
     socket.on('getUser', userName => {
       console.log(userName);
-      socket.emit('getUser', userName);
-    })
+      const user = {userName: userName, color: "red"};
+      users.push(user);
+      io.emit('updateUsers', users);
+    });
 
     socket.on("disconnect", function() {
       console.log("user disconnected");
-    })
-});
+    });
+  
+  });
 
 module.exports = {app: app, server: server};
