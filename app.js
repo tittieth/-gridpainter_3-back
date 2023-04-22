@@ -3,7 +3,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
-const cors = require('cors')
+const cors = require('cors');
 require("dotenv").config();
 
 console.log(process.env.MONGODB_URI);
@@ -17,21 +17,21 @@ const server = require('http').Server(app);
 
 const io = require("socket.io")(server, {
   cors: {
-    origin: "http://127.0.0.1:5502",
+    origin: "*",
     methods: ["GET", "POST"]
     }
 });
 
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true })
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
 
-const db = mongoose.connection
+const db = mongoose.connection;
 
 db.once('open', () => {
-  console.log('Database connected')
+  console.log('Database connected');
 });
 
 db.on('error', err => {
-  console.error('connection error:', err)
+  console.error('connection error:', err);
 });
 
 app.use(cors());
@@ -56,15 +56,16 @@ io.on("connection", function(socket) {
 
     socket.on('getUser', userName => {
       console.log(userName);
+
       const user = {userName: userName, color: "red"};
       users.push(user);
       io.emit('updateUsers', users);
+
     });
 
     socket.on("disconnect", function() {
       console.log("user disconnected");
     });
-  
-  });
+
 
 module.exports = {app: app, server: server};
