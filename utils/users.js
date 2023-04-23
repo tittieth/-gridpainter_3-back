@@ -5,7 +5,7 @@ function userJoin(id, username, color) {
     const user = { id, username, color };
 
     users.push(user);
-
+    console.log('new user' + users.username);
     return user;
 }
 
@@ -31,6 +31,7 @@ function getCurrentUser(id) {
 module.exports = {
     userJoin,
     getCurrentUser,
+    users
     // userLeave,
     // getRoomUsers
 };
