@@ -5,7 +5,7 @@ const ConclusionSchema = new mongoose.Schema({
     type: [String],
     required: true,
   },
-  pixelData: {
+  ids: {
     type:[[String]],
     required: true,
   },
