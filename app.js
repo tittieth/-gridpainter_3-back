@@ -85,6 +85,12 @@ io.on("connection", function(socket) {
       console.log(users);
     });
 
+    socket.on('paint', (facit) => {
+      console.log('detta är vårt facit' + facit);
+      io.emit('paint', facit);
+      
+    });
+
     socket.on("disconnect", function() {
       console.log("user disconnected");
     });
