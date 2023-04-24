@@ -5,6 +5,8 @@ const logger = require('morgan');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require("dotenv").config();
+const formatMessage = require('./utils/messages');
+// const formatMessage = require('messages');
 
 console.log(process.env.MONGODB_URI);
 
@@ -47,6 +49,7 @@ app.use('/conclusions', conclusionsRouter);
 
 const users = [];
 const colors = ['red', 'green', 'yellow', 'blue'];
+const botName = 'ChatCord Bot';
 
 let nextPlayer = 0;
 
@@ -67,15 +70,26 @@ io.on("connection", function(socket) {
         socket.emit('updateUsers', users);
         //socket.emit('usersJoined', users);
         
+        
       } else {
         socket.emit('fullGame');
       }
 
     });
+    
+
+    socket.on('chatMessage', (msg) => {
+      socket.emit('message', formatMessage(botName, 'välkommen till gridpainter!'));
+      console.log('msg' + msg);
+      io.emit('message', formatMessage('user', msg));
+      console.log(users);
+    });
 
     socket.on("disconnect", function() {
       console.log("user disconnected");
     });
+
+    
 
 
 });    
