@@ -46,6 +46,9 @@ app.use('/users', usersRouter);
 app.use('/conclusions', conclusionsRouter);
 
 const users = [];
+const colors = ['red', 'green', 'yellow', 'blue'];
+
+let nextPlayer = 0;
 
 io.on("connection", function(socket) {
     console.log(socket.id);
@@ -56,10 +59,17 @@ io.on("connection", function(socket) {
 
     socket.on('getUser', userName => {
       console.log(userName);
-
-      const user = {userName: userName, color: "red"};
-      users.push(user);
-      io.emit('updateUsers', users);
+      if (users.length < 4) {
+        const userColor = colors[nextPlayer];
+        const user = {userName: userName, color: userColor, id: socket.id};
+        nextPlayer++;
+        users.push(user);
+        socket.emit('updateUsers', users);
+        //socket.emit('usersJoined', users);
+        
+      } else {
+        socket.emit('fullGame');
+      }
 
     });
 
@@ -67,5 +77,7 @@ io.on("connection", function(socket) {
       console.log("user disconnected");
     });
 
+
+});    
 
 module.exports = {app: app, server: server};
