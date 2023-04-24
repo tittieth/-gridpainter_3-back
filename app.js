@@ -64,19 +64,14 @@ io.on("connection", function(socket) {
         const user = {userName: userName, color: userColor, id: socket.id};
         nextPlayer++;
         users.push(user);
-        io.emit('updateUsers', users);
-
+        socket.emit('updateUsers', users);
+        //socket.emit('usersJoined', users);
+        
       } else {
-        io.emit('fullGame');
+        socket.emit('fullGame');
       }
-    
 
     });
-
-    // socket.on('users', (users) => {
-    //   console.log(users);
-    //   io.emit('users');
-    // });
 
     socket.on("disconnect", function() {
       console.log("user disconnected");
