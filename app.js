@@ -76,13 +76,31 @@ io.on("connection", function(socket) {
       }
 
     });
-    
+    socket.on('joinGame', ({data}) => {
+      const user = (data);
+      console.log(user);
 
-    socket.on('chatMessage', (msg) => {
+      const lastUser = user[user.length - 1];
+
       socket.emit('message', formatMessage(botName, 'välkommen till gridpainter!'));
-      console.log('msg' + msg);
-      io.emit('message', formatMessage('user', msg));
-      console.log(users);
+
+      // Broadcast when a user connects
+      socket.broadcast.emit('message', formatMessage(botName, `${lastUser.userName} has joined the chat`));
+
+      socket.on("disconnect", () => {
+        // Find the user that disconnected
+        const disconnectedUser = user.find(u => u.socketId === socket.id);
+        console.log(disconnectedUser);
+        if (disconnectedUser) {
+
+          io.emit('message', formatMessage(botName, `${disconnectedUser.userName} has left the chat`));
+        }
+      });
+    });
+
+    socket.on('chatMessage', (msg, username) => {
+      console.log('msg' + msg + username);
+      io.emit('message', formatMessage(username, msg));
     });
 
     socket.on("disconnect", function() {
