@@ -14,8 +14,11 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const conclusionsRouter = require('./routes/conclusions');
 
+
 const app = express();
 const server = require('http').Server(app);
+
+const ConclusionModel = require('./models/conclusion-model');
 
 const io = require("socket.io")(server, {
   cors: {
@@ -69,8 +72,7 @@ io.on("connection", function(socket) {
         users.push(user);
         socket.emit('updateUsers', users);
         //socket.emit('usersJoined', users);
-        
-        
+                
       } else {
         socket.emit('fullGame');
       }
@@ -91,13 +93,17 @@ io.on("connection", function(socket) {
       
     });
 
-    socket.on("disconnect", function() {
-      console.log("user disconnected");
+    //socket for conclusion picture to db
+    socket.on("grid-data", async (data) => {
+      console.log("Received grid data:");
+      console.log(data);
+      //send painted picture to db
+      await ConclusionModel.create(data);
     });
 
-    
-
-
+    socket.on("disconnect", function() {
+      console.log("user disconnected");
+    }); 
 });    
 
 module.exports = {app: app, server: server};
