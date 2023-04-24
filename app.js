@@ -85,15 +85,18 @@ io.on("connection", function(socket) {
       socket.emit('message', formatMessage(botName, 'välkommen till gridpainter!'));
 
       // Broadcast when a user connects
-      socket.broadcast.emit('message', formatMessage(botName, `${lastUser.userName} has joined the chat`));
+      socket.broadcast.emit('message', formatMessage(botName, `${lastUser.userName} har anslutit till spelet`));
+
+      io.emit('gameUsers', user);
 
       socket.on("disconnect", () => {
         // Find the user that disconnected
-        const disconnectedUser = user.find(u => u.socketId === socket.id);
+        const disconnectedUser = user.find(u => u.id === socket.id);
         console.log(disconnectedUser);
         if (disconnectedUser) {
 
-          io.emit('message', formatMessage(botName, `${disconnectedUser.userName} has left the chat`));
+          io.emit('message', formatMessage(botName, `${disconnectedUser.userName} har lämnat spelet`));
+          io.emit('gameUsers', user);
         }
       });
     });
