@@ -87,16 +87,21 @@ io.on("connection", function(socket) {
       // Broadcast when a user connects
       socket.broadcast.emit('message', formatMessage(botName, `${lastUser.userName} har anslutit till spelet`));
 
-      io.emit('gameUsers', user);
+      io.emit('gameUsers', data);
 
       socket.on("disconnect", () => {
         // Find the user that disconnected
         const disconnectedUser = user.find(u => u.id === socket.id);
-        console.log(disconnectedUser);
-        if (disconnectedUser) {
+        console.log('user left game' + disconnectedUser.userName);
 
+        if (disconnectedUser) {
+          // const disconnectedUserIndex = user.findIndex(u => u.id === socket.id);
+          // const newUserArray = user.splice(disconnectedUserIndex, 1)[0];
+          // console.log('lämnat' + newUserArray.userName);
+          const users = user.filter(u => u.id !== socket.id);
+          console.log(users);
           io.emit('message', formatMessage(botName, `${disconnectedUser.userName} har lämnat spelet`));
-          io.emit('gameUsers', user);
+          io.emit('gameUsers', users);
         }
       });
     });
@@ -106,12 +111,9 @@ io.on("connection", function(socket) {
       io.emit('message', formatMessage(username, msg));
     });
 
-    socket.on("disconnect", function() {
-      console.log("user disconnected");
-    });
-
-    
-
+    // socket.on("disconnect", function() {
+    //   console.log("user disconnected");
+    // });
 
 });    
 
