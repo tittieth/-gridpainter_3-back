@@ -108,9 +108,14 @@ io.on("connection", function(socket) {
       });
     });
     
-    socket.on('image', (randomElement) => {
-      console.log('detta är vår slumpade bild ' + randomElement);
-      io.emit('image', randomElement);
+    // socket.on('image', (randomElement) => {
+    //   // console.log('detta är vår slumpade bild ' + randomElement);
+    //   io.emit('image', randomElement);
+    // });
+
+    socket.on("image", (randomElement) => {
+      // Broadcast the "randomElement" object to all connected clients
+      io.emit("image", randomElement);
     });
     
     socket.on('paint', (facit) => {
