@@ -78,13 +78,34 @@ io.on("connection", function(socket) {
       }
 
     });
-    
+    socket.on('joinGame', ({data}) => {
+      const user = (data);
+      console.log(user);
 
-    socket.on('chatMessage', (msg) => {
+      const lastUser = user[user.length - 1];
+
       socket.emit('message', formatMessage(botName, 'välkommen till gridpainter!'));
-      console.log('msg' + msg);
-      io.emit('message', formatMessage('user', msg));
-      console.log(users);
+
+      // Broadcast when a user connects
+      socket.broadcast.emit('message', formatMessage(botName, `${lastUser.userName} har anslutit till spelet`));
+
+      io.emit('gameUsers', data);
+
+      socket.on("disconnect", () => {
+        // Find the user that disconnected
+        const disconnectedUser = user.find(u => u.id === socket.id);
+        console.log('user left game' + disconnectedUser.userName);
+
+        if (disconnectedUser) {
+          // const disconnectedUserIndex = user.findIndex(u => u.id === socket.id);
+          // const newUserArray = user.splice(disconnectedUserIndex, 1)[0];
+          // console.log('lämnat' + newUserArray.userName);
+          const users = user.filter(u => u.id !== socket.id);
+          console.log(users);
+          io.emit('message', formatMessage(botName, `${disconnectedUser.userName} har lämnat spelet`));
+          io.emit('gameUsers', users);
+        }
+      });
     });
 
     socket.on('paint', (facit) => {
@@ -101,9 +122,15 @@ io.on("connection", function(socket) {
       await ConclusionModel.create(data);
     });
 
-    socket.on("disconnect", function() {
-      console.log("user disconnected");
-    }); 
+    socket.on('chatMessage', (msg, username) => {
+      console.log('msg' + msg + username);
+      io.emit('message', formatMessage(username, msg));
+    });
+
+    // socket.on("disconnect", function() {
+    //   console.log("user disconnected");
+    // });
+
 });    
 
 module.exports = {app: app, server: server};
