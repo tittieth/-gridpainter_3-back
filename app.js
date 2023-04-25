@@ -5,6 +5,8 @@ const logger = require('morgan');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require("dotenv").config();
+const formatMessage = require('./utils/messages');
+// const formatMessage = require('messages');
 
 console.log(process.env.MONGODB_URI);
 
@@ -47,6 +49,7 @@ app.use('/conclusions', conclusionsRouter);
 
 const users = [];
 const colors = ['red', 'green', 'yellow', 'blue'];
+const botName = 'ChatCord Bot';
 
 let nextPlayer = 0;
 
@@ -67,16 +70,50 @@ io.on("connection", function(socket) {
         socket.emit('updateUsers', users);
         //socket.emit('usersJoined', users);
         
+        
       } else {
         socket.emit('fullGame');
       }
 
     });
+    socket.on('joinGame', ({data}) => {
+      const user = (data);
+      console.log(user);
 
-    socket.on("disconnect", function() {
-      console.log("user disconnected");
+      const lastUser = user[user.length - 1];
+
+      socket.emit('message', formatMessage(botName, 'välkommen till gridpainter!'));
+
+      // Broadcast when a user connects
+      socket.broadcast.emit('message', formatMessage(botName, `${lastUser.userName} har anslutit till spelet`));
+
+      io.emit('gameUsers', data);
+
+      socket.on("disconnect", () => {
+        // Find the user that disconnected
+        const disconnectedUser = user.find(u => u.id === socket.id);
+        console.log('user left game' + disconnectedUser.userName);
+
+        if (disconnectedUser) {
+          // const disconnectedUserIndex = user.findIndex(u => u.id === socket.id);
+          // const newUserArray = user.splice(disconnectedUserIndex, 1)[0];
+          // console.log('lämnat' + newUserArray.userName);
+          const users = user.filter(u => u.id !== socket.id);
+          console.log(users);
+          io.emit('message', formatMessage(botName, `${disconnectedUser.userName} har lämnat spelet`));
+          io.emit('gameUsers', users);
+        }
+      });
     });
 
+    socket.on('chatMessage', (msg, username) => {
+      console.log('msg' + msg + username);
+      io.emit('message', formatMessage(username, msg));
+    });
+
+    // socket.on("disconnect", function() {
+    //   console.log("user disconnected");
+    // });
 
 });    
 
