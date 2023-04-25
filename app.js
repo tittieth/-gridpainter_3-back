@@ -51,7 +51,7 @@ app.use('/users', usersRouter);
 app.use('/conclusions', conclusionsRouter);
 
 const users = [];
-const colors = ['red', 'green', 'yellow', 'blue'];
+const colors = ['#27f591', '#1be7fa', '#FCE38A', '#F38181'];
 const botName = 'ChatCord Bot';
 
 let nextPlayer = 0;
