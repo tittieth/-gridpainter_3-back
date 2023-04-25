@@ -107,7 +107,12 @@ io.on("connection", function(socket) {
         }
       });
     });
-
+    
+    socket.on('image', (randomElement) => {
+      console.log('detta är vår slumpade bild ' + randomElement);
+      io.emit('image', randomElement);
+    });
+    
     socket.on('paint', (facit) => {
       console.log('detta är vårt facit' + facit);
       io.emit('paint', facit);
