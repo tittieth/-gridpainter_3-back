@@ -78,6 +78,15 @@ io.on("connection", function(socket) {
       }
 
     });
+
+    socket.on('startGame', (data) => {
+      // Kollar så att det är 4 användare 
+      if (data.length === 4) {
+        // aktiverar då startknappen
+      io.emit('activateStartGameBtn');
+      }
+    });
+
     socket.on('joinGame', ({data}) => {
       const user = (data);
       console.log(user);
