@@ -14,8 +14,11 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const conclusionsRouter = require('./routes/conclusions');
 
+
 const app = express();
 const server = require('http').Server(app);
+
+const ConclusionModel = require('./models/conclusion-model');
 
 const io = require("socket.io")(server, {
   cors: {
@@ -48,7 +51,7 @@ app.use('/users', usersRouter);
 app.use('/conclusions', conclusionsRouter);
 
 const users = [];
-const colors = ['red', 'green', 'yellow', 'blue'];
+const colors = ['#27f591', '#1be7fa', '#FCE38A', '#F38181'];
 const botName = 'ChatCord Bot';
 
 let nextPlayer = 0;
@@ -69,8 +72,7 @@ io.on("connection", function(socket) {
         users.push(user);
         socket.emit('updateUsers', users);
         //socket.emit('usersJoined', users);
-        
-        
+                
       } else {
         socket.emit('fullGame');
       }
@@ -104,6 +106,30 @@ io.on("connection", function(socket) {
           io.emit('gameUsers', users);
         }
       });
+    });
+    
+    // socket.on('image', (randomElement) => {
+    //   // console.log('detta är vår slumpade bild ' + randomElement);
+    //   io.emit('image', randomElement);
+    // });
+
+    socket.on("image", (randomElement) => {
+      // Broadcast the "randomElement" object to all connected clients
+      io.emit("image", randomElement);
+    });
+    
+    socket.on('paint', (facit) => {
+      console.log('detta är vårt facit' + facit);
+      io.emit('paint', facit);
+      
+    });
+
+    //socket for conclusion picture to db
+    socket.on("grid-data", async (data) => {
+      console.log("Received grid data:");
+      console.log(data);
+      //send painted picture to db
+      await ConclusionModel.create(data);
     });
 
     socket.on('chatMessage', (msg, username) => {
