@@ -79,24 +79,28 @@ io.on("connection", function(socket) {
 
     });
 
-    socket.on('startGame', (data) => {
+    socket.on('startGameBtn', (data) => {
       // Kollar så att det är 4 användare 
       if (data.length === 4) {
         // aktiverar då startknappen
-      io.emit('activateStartGameBtn');
+      io.emit('activateGameBtn');
       }
+    });
+
+    socket.on('startGame', (data) => {
+     io.emit('startGame', data);
     });
 
     socket.on('joinGame', ({data}) => {
       const user = (data);
       console.log(user);
 
-      const lastUser = user[user.length - 1];
+      //const lastUser = user[user.length - 1];
 
       socket.emit('message', formatMessage(botName, 'välkommen till gridpainter!'));
 
       // Broadcast when a user connects
-      socket.broadcast.emit('message', formatMessage(botName, `${lastUser.userName} har anslutit till spelet`));
+      //socket.broadcast.emit('message', formatMessage(botName, `${lastUser.userName} har anslutit till spelet`));
 
       io.emit('gameUsers', data);
 
@@ -122,9 +126,9 @@ io.on("connection", function(socket) {
     //   io.emit('image', randomElement);
     // });
 
-    socket.on("image", (randomElement) => {
+    socket.on("image", (img1) => {
       // Broadcast the "randomElement" object to all connected clients
-      io.emit("image", randomElement);
+      io.emit("image", img1);
     });
     
     socket.on('paint', (facit) => {
