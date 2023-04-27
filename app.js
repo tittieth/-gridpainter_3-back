@@ -171,18 +171,18 @@ io.on("connection", function(socket) {
       io.emit('message', formatMessage(username, msg));
     });
 
-    // socket.on("disconnect", function() {
-    // //   console.log("user disconnected");
-    //       const disconnectedUser = users.find(u => u.id === socket.id);
+    socket.on("disconnect", function() {
+    //   console.log("user disconnected");
+          const disconnectedUser = users.find(u => u.id === socket.id);
 
-    //       if(disconnectedUser) {
-    //         const userIndex = users.indexOf(disconnectedUser);
-    //         users.splice(userIndex, 1);
+          if(disconnectedUser) {
+            const userIndex = users.indexOf(disconnectedUser);
+            users.splice(userIndex, 1);
             
-    //         console.log(users);
-    //       }
-    //       io.emit('updateUsers', (users));
-    //  });
+            console.log(users);
+          }
+          io.emit('updateUsers', (users));
+     });
 
 });    
 
