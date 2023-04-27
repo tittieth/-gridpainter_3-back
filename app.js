@@ -53,7 +53,6 @@ app.use('/conclusions', conclusionsRouter);
 let users = [];
 const colors = ['#27f591', '#1be7fa', '#FCE38A', '#F38181'];
 const botName = 'ChatCord Bot';
-const playerData = [];
 
 let nextPlayer = 0;
 
@@ -154,10 +153,7 @@ io.on("connection", function(socket) {
 
 
     socket.on('paint', (data) => {
-
-      const player = data[data.length - 1].player;
-      playerData[player] = data;
-      io.emit('paint', [].concat(...Object.values(playerData)));
+      io.emit('paint', (data));
       
     });
 
