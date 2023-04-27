@@ -50,11 +50,16 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/conclusions', conclusionsRouter);
 
-const users = [];
+let users = [];
 const colors = ['#27f591', '#1be7fa', '#FCE38A', '#F38181'];
 const botName = 'ChatCord Bot';
 
 let nextPlayer = 0;
+
+const closeServer = () => {
+  io.disconnectSockets();
+  console.log("Nedkopplade");
+};
 
 io.on("connection", function(socket) {
     console.log(socket.id);
@@ -76,8 +81,19 @@ io.on("connection", function(socket) {
       } else {
         socket.emit('fullGame');
       }
+      
+        socket.on("cancelGame", () => {
+          // Broadcast the redirect event to all sockets except for the one that triggered the cancelGame event
+          socket.broadcast.emit("redirect");
+          closeServer(); 
 
-    });
+          users = [];
+          console.log("users: " + users);
+        });
+      });
+
+
+    
 
     socket.on('startGameBtn', (data) => {
       // Kollar så att det är 4 användare 
@@ -86,6 +102,12 @@ io.on("connection", function(socket) {
       io.emit('activateGameBtn');
       }
     });
+
+  //   socket.on("disconnectServer", () => {
+  //     console.log("Server stängningshändelse mottagen från klient");
+  //     closeServer();
+  //   });
+  // });
 
     socket.on('startGame', (data) => {
      io.emit('startGame', data);
