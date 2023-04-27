@@ -78,9 +78,10 @@ io.on("connection", function(socket) {
         users.push(user);
         io.emit('updateUsers', users);
         //socket.emit('usersJoined', users);
-        callback(true);       
+        // callback(true);       
       } else {
-        callback(false);
+        console.log('full server');
+        // callback(false);
         // socket.emit('fullGame');
       }
       
