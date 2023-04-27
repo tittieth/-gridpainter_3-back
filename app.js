@@ -19,7 +19,6 @@ const app = express();
 const server = require('http').Server(app);
 
 const ConclusionModel = require('./models/conclusion-model');
-const { callbackify } = require('util');
 
 const io = require("socket.io")(server, {
   cors: {
@@ -79,8 +78,7 @@ io.on("connection", function(socket) {
         users.push(user);
         io.emit('updateUsers', users);
         //socket.emit('usersJoined', users);
-        callback(true);
-                
+        callback(true);       
       } else {
         callback(false);
         // socket.emit('fullGame');
