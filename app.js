@@ -162,23 +162,27 @@ io.on("connection", function(socket) {
       await ConclusionModel.create(data);
     });
 
+    socket.on('result', (similarityPercentage) => {
+      io.emit('result', similarityPercentage);
+    });
+
     socket.on('chatMessage', (msg, username) => {
       //console.log('msg' + msg + username);
       io.emit('message', formatMessage(username, msg));
     });
 
-    socket.on("disconnect", function() {
-    //   console.log("user disconnected");
-          const disconnectedUser = users.find(u => u.id === socket.id);
+    // socket.on("disconnect", function() {
+    // //   console.log("user disconnected");
+    //       const disconnectedUser = users.find(u => u.id === socket.id);
 
-          if(disconnectedUser) {
-            const userIndex = users.indexOf(disconnectedUser);
-            users.splice(userIndex, 1);
+    //       if(disconnectedUser) {
+    //         const userIndex = users.indexOf(disconnectedUser);
+    //         users.splice(userIndex, 1);
             
-            console.log(users);
-          }
-          io.emit('updateUsers', (users));
-     });
+    //         console.log(users);
+    //       }
+    //       io.emit('updateUsers', (users));
+    //  });
 
 });    
 
