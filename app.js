@@ -19,6 +19,7 @@ const app = express();
 const server = require('http').Server(app);
 
 const ConclusionModel = require('./models/conclusion-model');
+const { callbackify } = require('util');
 
 const io = require("socket.io")(server, {
   cors: {
@@ -69,7 +70,7 @@ io.on("connection", function(socket) {
     //console.log(socket.id);
 
   
-    socket.on('getUser', userName => {
+    socket.on('getUser', (userName, callback) => {
       console.log(userName);
       if (users.length < 4) {
         const userColor = colors[nextPlayer];
@@ -78,9 +79,11 @@ io.on("connection", function(socket) {
         users.push(user);
         io.emit('updateUsers', users);
         //socket.emit('usersJoined', users);
+        callback(true);
                 
       } else {
-        socket.emit('fullGame');
+        callback(false);
+        // socket.emit('fullGame');
       }
       
         socket.on("cancelGame", () => {
