@@ -53,8 +53,11 @@ app.use('/conclusions', conclusionsRouter);
 const users = [];
 const colors = ['#27f591', '#1be7fa', '#FCE38A', '#F38181'];
 const botName = 'ChatCord Bot';
+const playerData = [];
 
 let nextPlayer = 0;
+
+let randomImage;
 
 io.on("connection", function(socket) {
     console.log(socket.id);
@@ -87,8 +90,17 @@ io.on("connection", function(socket) {
       }
     });
 
-    socket.on('startGame', (data) => {
+    socket.on('startGame', async (data) => {
      io.emit('startGame', data);
+
+     if (!randomImage) {
+
+      const conclusionArray = await ConclusionModel.find();
+      const randomIndex = Math.floor(Math.random() * conclusionArray.length);
+      randomImage = conclusionArray[randomIndex];
+    }
+    io.emit('image', randomImage);
+
     });
 
     socket.on('joinGame', ({data}) => {
@@ -120,20 +132,13 @@ io.on("connection", function(socket) {
         }
       });
     });
-    
-    // socket.on('image', (randomElement) => {
-    //   // console.log('detta är vår slumpade bild ' + randomElement);
-    //   io.emit('image', randomElement);
-    // });
 
-    socket.on("image", (img1) => {
-      // Broadcast the "randomElement" object to all connected clients
-      io.emit("image", img1);
-    });
-    
-    socket.on('paint', (facit) => {
-      console.log('detta är vårt facit' + facit);
-      io.emit('paint', facit);
+
+    socket.on('paint', (data) => {
+
+      const player = data[data.length - 1].player;
+      playerData[player] = data;
+      io.emit('paint', [].concat(...Object.values(playerData)));
       
     });
 
