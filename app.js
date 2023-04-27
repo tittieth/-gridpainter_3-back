@@ -50,14 +50,21 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/conclusions', conclusionsRouter);
 
-const users = [];
+let users = [];
 const colors = ['#27f591', '#1be7fa', '#FCE38A', '#F38181'];
 const botName = 'ChatCord Bot';
 const playerData = [];
 
 let nextPlayer = 0;
 
+
+const closeServer = () => {
+  io.disconnectSockets();
+  console.log("Nedkopplade");
+};
+
 let randomImage;
+
 
 io.on("connection", function(socket) {
     console.log(socket.id);
@@ -79,8 +86,18 @@ io.on("connection", function(socket) {
       } else {
         socket.emit('fullGame');
       }
+      
+        socket.on("cancelGame", () => {
+          socket.broadcast.emit("redirect");
+          closeServer();
+          users.length = 0;
+          nextPlayer = 0;
+          console.log("users: " + nextPlayer);
+        });
+      });
 
-    });
+
+    
 
     socket.on('startGameBtn', (data) => {
       // Kollar så att det är 4 användare 
@@ -90,7 +107,9 @@ io.on("connection", function(socket) {
       }
     });
 
+
     socket.on('startGame', async (data) => {
+
      io.emit('startGame', data);
 
      if (!randomImage) {
