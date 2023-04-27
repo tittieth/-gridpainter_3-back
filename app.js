@@ -66,12 +66,9 @@ let randomImage;
 
 
 io.on("connection", function(socket) {
-    console.log(socket.id);
+    //console.log(socket.id);
 
-    socket.on('userEnter', (number, string) => {
-      console.log(number, string);
-    });
-
+  
     socket.on('getUser', userName => {
       console.log(userName);
       if (users.length < 4) {
@@ -79,7 +76,7 @@ io.on("connection", function(socket) {
         const user = {userName: userName, color: userColor, id: socket.id};
         nextPlayer++;
         users.push(user);
-        socket.emit('updateUsers', users);
+        io.emit('updateUsers', users);
         //socket.emit('usersJoined', users);
                 
       } else {
@@ -91,7 +88,7 @@ io.on("connection", function(socket) {
           closeServer();
           users.length = 0;
           nextPlayer = 0;
-          console.log("users: " + nextPlayer);
+          //console.log("users: " + nextPlayer);
         });
       });
 
@@ -123,7 +120,7 @@ io.on("connection", function(socket) {
 
     socket.on('joinGame', ({data}) => {
       const user = (data);
-      console.log(user);
+      //console.log(user);
 
       //const lastUser = user[user.length - 1];
 
@@ -137,14 +134,14 @@ io.on("connection", function(socket) {
       socket.on("disconnect", () => {
         // Find the user that disconnected
         const disconnectedUser = user.find(u => u.id === socket.id);
-        console.log('user left game' + disconnectedUser.userName);
+        //console.log('user left game' + disconnectedUser.userName);
 
         if (disconnectedUser) {
           // const disconnectedUserIndex = user.findIndex(u => u.id === socket.id);
           // const newUserArray = user.splice(disconnectedUserIndex, 1)[0];
           // console.log('lämnat' + newUserArray.userName);
           const users = user.filter(u => u.id !== socket.id);
-          console.log(users);
+          //console.log(users);
           io.emit('message', formatMessage(botName, `${disconnectedUser.userName} har lämnat spelet`));
           io.emit('gameUsers', users);
         }
@@ -159,20 +156,29 @@ io.on("connection", function(socket) {
 
     //socket for conclusion picture to db
     socket.on("grid-data", async (data) => {
-      console.log("Received grid data:");
-      console.log(data);
+      //console.log("Received grid data:");
+      //console.log(data);
       //send painted picture to db
       await ConclusionModel.create(data);
     });
 
     socket.on('chatMessage', (msg, username) => {
-      console.log('msg' + msg + username);
+      //console.log('msg' + msg + username);
       io.emit('message', formatMessage(username, msg));
     });
 
-    // socket.on("disconnect", function() {
+    socket.on("disconnect", function() {
     //   console.log("user disconnected");
-    // });
+          const disconnectedUser = users.find(u => u.id === socket.id);
+
+          if(disconnectedUser) {
+            const userIndex = users.indexOf(disconnectedUser);
+            users.splice(userIndex, 1);
+            
+            console.log(users);
+          }
+          io.emit('updateUsers', (users));
+     });
 
 });    
 
