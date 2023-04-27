@@ -69,7 +69,7 @@ io.on("connection", function(socket) {
     //console.log(socket.id);
 
   
-    socket.on('getUser', (userName, callback) => {
+    socket.on('getUser', (userName) => {
       console.log(userName);
       if (users.length < 4) {
         const userColor = colors[nextPlayer];
