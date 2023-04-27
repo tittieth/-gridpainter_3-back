@@ -80,7 +80,7 @@ io.on("connection", function(socket) {
         //socket.emit('usersJoined', users);
                 
       } else {
-        socket.broadcast.emit('fullGame');
+        socket.emit('fullGame');
       }
       
         socket.on("cancelGame", () => {
