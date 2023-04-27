@@ -83,12 +83,11 @@ io.on("connection", function(socket) {
       }
       
         socket.on("cancelGame", () => {
-          // Broadcast the redirect event to all sockets except for the one that triggered the cancelGame event
           socket.broadcast.emit("redirect");
-          closeServer(); 
-
-          users = [];
-          console.log("users: " + users);
+          closeServer();
+          users.length = 0;
+          nextPlayer = 0;
+          console.log("users: " + nextPlayer);
         });
       });
 
