@@ -74,6 +74,7 @@ io.on("connection", function(socket) {
       if (users.length < 4) {
         const userColor = colors[nextPlayer];
         const user = {userName: userName, color: userColor, id: socket.id};
+        console.log(user);
         nextPlayer++;
         users.push(user);
         io.emit('updateUsers', users);
