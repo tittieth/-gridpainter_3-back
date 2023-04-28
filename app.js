@@ -67,24 +67,23 @@ let randomImage;
 
 io.on("connection", function(socket) {
     //console.log(socket.id);
-
-  
     socket.on('getUser', (userName) => {
       console.log(userName);
       if (users.length < 4) {
-        const userColor = colors[nextPlayer];
-        const user = {userName: userName, color: userColor, id: socket.id};
-        console.log(user);
-        nextPlayer++;
-        users.push(user);
-        io.emit('updateUsers', users);
-        //socket.emit('usersJoined', users);
-        // callback(true);       
+        const userColor = colors.find(color => !users.some(user => user.color === color));
+        if (userColor) {
+          const user = {userName: userName, color: userColor, id: socket.id};
+          console.log(user);
+          users.push(user);
+          io.emit('updateUsers', users);
+          nextPlayer++;
+        } else {
+          console.log('No available color');
+        }
       } else {
-        console.log('full server');
-        // callback(false);
-        // socket.emit('fullGame');
+        console.log('Full server');
       }
+  
       
         socket.on("cancelGame", () => {
           socket.broadcast.emit("redirect");
@@ -174,18 +173,21 @@ io.on("connection", function(socket) {
       io.emit('message', formatMessage(username, msg));
     });
 
-    socket.on("disconnect", function() {
-    //   console.log("user disconnected");
-          const disconnectedUser = users.find(u => u.id === socket.id);
+    socket.on("disconnect", () => {
+      
+      const disconnectedUser = users.find(u => u.id === socket.id);
+    
+      if (disconnectedUser) {
+        const disconnectedUser = users.find(u => u.id === socket.id)
+        const userIndex = users.indexOf(disconnectedUser);
+        users.splice(userIndex, 1);
+        nextPlayer--;
+        io.emit('updateUsers', users);
+        console.log(disconnectedUser.userName, users, nextPlayer);
+        io.emit('message', formatMessage(botName, `${disconnectedUser.userName} har lämnat spelet`));
+      }
+    });
 
-          if(disconnectedUser) {
-            const userIndex = users.indexOf(disconnectedUser);
-            users.splice(userIndex, 1);
-            
-            console.log(users);
-          }
-          io.emit('updateUsers', (users));
-     });
 
 });    
 
