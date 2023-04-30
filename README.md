@@ -1,10 +1,10 @@
-# [Gridpainter](https://github.com/tittieth/gridpainter_3-back)
+# [Gridpainter](https://marialbovin.github.io/gridpainter_3/?)
  
 This is a group project called "Gridpainter" developed for school @Medieinstitutet. It's a fun game that requires four players to play, and each player is assigned a unique color: blue, red, green, or yellow. The game is in swedish. 
 
 The backend repository is connected to a database to store and retrieve game data.
 
-*Repository for frontend:* [Gridpainter_3](https://marialbovin.github.io/gridpainter_3/?)
+*Repository for frontend:* [Gridpainter_3](https://github.com/MariaLBovin/gridpainter_3)
 
 #### Game Objective
 The objective of the game is to color a 15 x 15 grid as per the given picture. Each player will have a specific area of the grid assigned to them, and they will have to paint the cells of the grid in their assigned color to match the picture as accurately as possible. The game result will display the accuracy of each player's colored cells in percentage. 
